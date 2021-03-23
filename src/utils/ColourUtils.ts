@@ -4,24 +4,11 @@ export interface RGB {
     blue: number
 }
 
-export class Colour {
-    private rgb: RGB
+let lastId = 0;
 
-    constructor(initialState: RGB) {
-        this.rgb = initialState
-    }
-
-    get hex(): string {
-        return rgb2Hex(this.rgb)
-    }
-
-    set hex(hex: string) {
-        this.hex = hex;
-    }
-
-    get brightness(): number {
-        return brightness(this.rgb)
-    }
+export function generateId(prefix='id'): string {
+    lastId++;
+    return `${prefix}-${lastId}`
 }
 
 export function generateRgb(): RGB {
@@ -32,19 +19,19 @@ export function generateRgb(): RGB {
     }
 }
 
-function rgb2Hex(colour: RGB) {
+export function rgb2Hex(colour: RGB) {
     return `#${dec2Hex(colour.red)}${dec2Hex(colour.green)}${dec2Hex(colour.blue)}`;
 }
 
-function textColour(colour: RGB) {
+export function decideTextColour(colour: RGB) {
     return brightness(colour) > 125 ? 'black' : 'white';
 }
 
-function random(min: number, max: number): number {
+export function random(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function dec2Hex(dec: number) {
+export function dec2Hex(dec: number) {
     let hex = dec.toString(16);
     return hex.length === 1 ? '0' + hex : hex;
 }
@@ -53,7 +40,7 @@ function dec2Hex(dec: number) {
  * brightness  = sqrt( .299*R2 + .587*G2 + .114*B2 );
  * from here: alienryderflex.com/hsp.html
  */
-function brightness(colour: RGB) {
+export function brightness(colour: RGB) {
     return Math.round(
         Math.sqrt(
             Math.pow(colour.red, 2) * 0.299 +

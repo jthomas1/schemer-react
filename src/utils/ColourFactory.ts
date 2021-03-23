@@ -1,4 +1,5 @@
-import {Colour, generateRgb, RGB} from "./colour_util";
+import { generateRgb, RGB} from "./ColourUtils";
+import { Colour } from "../models/Colour";
 
 export const ColourFactory = {
     fromRgb(rgb: RGB): Colour {
