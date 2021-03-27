@@ -13,18 +13,28 @@
   background-color: #282c34;
   flex: 1;
   display: flex;
-
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
 .colour-list {
   flex: 1;
-  display: flex;
-  flex-direction: row;
+  display: grid;
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.colour-list.columns {
+  grid-auto-flow: column;
+}
+
+.colour-list.rows {
+  grid-auto-flow: row;
+}
+
+.colour-list.grid {
+  grid-template-columns: auto auto;
 }
 
 .colour-item {

@@ -5,20 +5,25 @@ import { SettingsMenu } from "./components/SettingsMenu/SettingsMenu";
 import { ColourFactory } from "./utils/ColourFactory";
 import { Colour } from "./models/Colour";
 
-export interface IColoursContext {
+export interface IAppContext {
     colours: Colour[],
-    setColours: (colours: Colour[]) => void
+    setColours: (colours: Colour[]) => void,
+    layout: string,
+    setLayout: (layout: string) => void
 }
 
-export const ColoursContext = createContext<IColoursContext>( {
+export const AppContext = createContext<IAppContext>( {
     colours: [],
-    setColours: colours => console.warn('no colours provider')
+    setColours: colours => console.warn('no colours provider'),
+    layout: 'columns',
+    setLayout: layout => console.warn('no layout provider')
 })
 
-export const useColours = () => useContext(ColoursContext);
+export const useApp = () => useContext(AppContext);
 
 function App() {
     const [ colours, setColours ] = useState<Colour[]>(ColourFactory.generateN(4))
+    const [ layout, setLayout ] = useState<string>('columns')
 
     /**
      * Randomise colours if the space bar is pressed
@@ -38,18 +43,19 @@ function App() {
         }
     })
 
+
     return (
         <div className="App">
-            <ColoursContext.Provider value={{ colours, setColours }}>
+            <AppContext.Provider value={{ colours, setColours, layout, setLayout }}>
                 <header className="app-header">
                     <SettingsMenu />
                 </header>
-                <main className="colour-container">
-                    <ul className="colour-list">{ colours.map(colour =>
-                        <li className="colour-item" key={ colour.id }><ColourBar colour={ colour }/></li>
-                    ) }</ul>
-                </main>
-            </ColoursContext.Provider>
+            </AppContext.Provider>
+            <main className="colour-container">
+                <ul className={`colour-list ${ layout } `}>{ colours.map(colour =>
+                    <li className="colour-item" key={ colour.id }><ColourBar colour={ colour }/></li>
+                ) }</ul>
+            </main>
         </div>
     );
 }

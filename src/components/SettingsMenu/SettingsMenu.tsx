@@ -1,11 +1,18 @@
 import React from 'react';
 import { ColourFactory } from "../../utils/ColourFactory";
-import { useColours } from "../../App";
+import { useApp } from "../../App";
 
-interface SettingsMenuProps {}
+interface SettingsMenuProps {
+}
+
+enum Layouts {
+    Columns = 'columns',
+    Rows = 'rows',
+    Grid = 'grid'
+}
 
 export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
-    const { colours, setColours } = useColours();
+    const { colours, setColours, layout, setLayout } = useApp();
 
     function addColour() {
         setColours([ ...colours, ColourFactory.random() ])
@@ -17,6 +24,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
         setColours(copy)
     }
 
+    function layoutHandler(event: any) {
+        setLayout(event.target.value)
+    }
+
     return (
         <div>
             <button type="button" onClick={ addColour }>
@@ -25,6 +36,12 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
             <button type="button" onClick={ removeColour }>
                 Remove Colour
             </button>
+            <label htmlFor="layoutSelect">Layout: </label>
+            <select name="layoutSelect" id="layoutSelect" onChange={ layoutHandler }>
+                <option value={ Layouts.Columns } selected={ layout === Layouts.Columns }>Columns</option>
+                <option value={ Layouts.Rows } selected={ layout === Layouts.Rows }>Rows</option>
+                <option value={ Layouts.Grid } selected={ layout === Layouts.Grid }>Grid</option>
+            </select>
         </div>
     )
 }
