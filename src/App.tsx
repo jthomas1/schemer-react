@@ -12,6 +12,12 @@ export interface IAppContext {
     setLayout: (layout: string) => void
 }
 
+export enum Layouts {
+    Columns = 'columns',
+    Rows = 'rows',
+    Grid = 'grid'
+}
+
 export const AppContext = createContext<IAppContext>( {
     colours: [],
     setColours: colours => console.warn('no colours provider'),
@@ -19,11 +25,11 @@ export const AppContext = createContext<IAppContext>( {
     setLayout: layout => console.warn('no layout provider')
 })
 
-export const useApp = () => useContext(AppContext);
+export const useAppContext = () => useContext(AppContext);
 
 function App() {
     const [ colours, setColours ] = useState<Colour[]>(ColourFactory.generateN(4))
-    const [ layout, setLayout ] = useState<string>('columns')
+    const [ layout, setLayout ] = useState<string>(Layouts.Columns)
 
     /**
      * Randomise colours if the space bar is pressed
@@ -31,7 +37,16 @@ function App() {
      */
     function spaceListener(event: KeyboardEvent) {
         if (event.key === " ") {
-            setColours(ColourFactory.generateN(colours.length))
+            let newColours: Colour[] = []
+            colours.forEach(colour => {
+                if (colour.locked) {
+                    newColours.push(colour)
+                } else {
+                    newColours.push(ColourFactory.random())
+                }
+            })
+
+            setColours(newColours)
         }
     }
 

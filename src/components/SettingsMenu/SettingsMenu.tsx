@@ -1,18 +1,12 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { ColourFactory } from "../../utils/ColourFactory";
-import { useApp } from "../../App";
+import { useAppContext, Layouts } from "../../App";
 
 interface SettingsMenuProps {
 }
 
-enum Layouts {
-    Columns = 'columns',
-    Rows = 'rows',
-    Grid = 'grid'
-}
-
 export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
-    const { colours, setColours, layout, setLayout } = useApp();
+    const { colours, setColours, layout, setLayout } = useAppContext();
 
     function addColour() {
         setColours([ ...colours, ColourFactory.random() ])
@@ -24,7 +18,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
         setColours(copy)
     }
 
-    function layoutHandler(event: any) {
+    function layoutHandler(event: ChangeEvent<HTMLSelectElement>) {
         setLayout(event.target.value)
     }
 
@@ -37,10 +31,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
                 Remove Colour
             </button>
             <label htmlFor="layoutSelect">Layout: </label>
-            <select name="layoutSelect" id="layoutSelect" onChange={ layoutHandler }>
-                <option value={ Layouts.Columns } selected={ layout === Layouts.Columns }>Columns</option>
-                <option value={ Layouts.Rows } selected={ layout === Layouts.Rows }>Rows</option>
-                <option value={ Layouts.Grid } selected={ layout === Layouts.Grid }>Grid</option>
+            <select name="layoutSelect" id="layoutSelect" defaultValue={ layout } onChange={ layoutHandler }>
+                { Object.values(Layouts).map(layout => {
+                    return <option value={ layout }>{ layout }</option>
+                }) }
             </select>
         </div>
     )

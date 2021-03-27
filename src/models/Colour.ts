@@ -17,10 +17,12 @@ function generateId(prefix = 'id'): string {
 export class Colour {
     public rgb: RGB
     public id: string
+    public locked: boolean
 
     constructor(rgb: RGB) {
         this.rgb = rgb
         this.id = generateId()
+        this.locked = false
     }
 
     randomise() {

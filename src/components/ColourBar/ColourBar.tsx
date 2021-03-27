@@ -12,7 +12,7 @@ interface ColourBarProps {
 export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
     const [ backgroundColour, setBackgroundColor ] = useState<RGB>(colour.rgb)
     const [ textColour, setTextColour ] = useState<string>(decideTextColour(colour.rgb))
-    const [ locked, setLocked ] = useState<Boolean>(false)
+    const [ locked, setLocked ] = useState<Boolean>(colour.locked)
     const [ flipped, setFlipped ] = useState<Boolean>(false)
 
     const styles = {
@@ -31,6 +31,7 @@ export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
     }
 
     function toggleLock() {
+        colour.locked = !colour.locked;
         setLocked(!locked)
     }
 
