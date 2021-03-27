@@ -1,11 +1,25 @@
-import {generateId, generateRgb, RGB, rgb2Hex, brightness} from "../utils/ColourUtils";
+import { generateRgb, RGB, rgb2Hex, brightness } from "../utils/ColourUtils";
 
+let lastId = 0;
+
+/**
+ * Generates a unique ID for each colour
+ * @param prefix
+ */
+function generateId(prefix = 'id'): string {
+    lastId++;
+    return `${ prefix }-${ lastId }`
+}
+
+/**
+ * Class representing a colour, instantiated from RGB values
+ */
 export class Colour {
     public rgb: RGB
     public id: string
 
-    constructor(initialState: RGB) {
-        this.rgb = initialState
+    constructor(rgb: RGB) {
+        this.rgb = rgb
         this.id = generateId()
     }
 

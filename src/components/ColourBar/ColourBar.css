@@ -1,11 +1,13 @@
 .colour-bar {
     padding: 20px;
-    margin: 10px;
+    /*margin: 10px;*/
 
     transition: 0.6s;
     transform-style: preserve-3d;
 
     position: relative;
+
+    width: 100%
 }
 
 .colour-bar .front {

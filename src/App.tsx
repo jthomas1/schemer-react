@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import './App.css';
-import ColourBar from "./components/ColourBar";
+import { ColourBar } from "./components/ColourBar/ColourBar";
+import { SettingsMenu } from "./components/SettingsMenu/SettingsMenu";
 import { ColourFactory } from "./utils/ColourFactory";
-import {Colour} from "./models/Colour";
+import { Colour } from "./models/Colour";
 
-function generateNColours(count: number) : Colour[] {
-    return Array(count).fill(null).map(ColourFactory.random)
+export interface IColoursContext {
+    colours: Colour[],
+    setColours: (colours: Colour[]) => void
 }
 
+export const ColoursContext = createContext<IColoursContext>( {
+    colours: [],
+    setColours: colours => console.warn('no colours provider')
+})
+
+export const useColours = () => useContext(ColoursContext);
+
 function App() {
-    const [colours, setColours] = useState<Colour[]>(generateNColours(3))
+    const [ colours, setColours ] = useState<Colour[]>(ColourFactory.generateN(4))
 
-    function addColour() {
-        setColours([...colours, ColourFactory.random()])
-    }
-
-    function removeColour() {
-        const copy = [...colours];
-        copy.pop()
-        setColours(copy)
-    }
-
-    function checkSpacebar(event: KeyboardEvent) {
+    /**
+     * Randomise colours if the space bar is pressed
+     * @param event
+     */
+    function spaceListener(event: KeyboardEvent) {
         if (event.key === " ") {
-            setColours(generateNColours(colours.length))
+            setColours(ColourFactory.generateN(colours.length))
         }
     }
 
     useEffect(() => {
-        window.addEventListener('keyup', checkSpacebar);
+        window.addEventListener('keyup', spaceListener);
 
         return () => {
-            window.removeEventListener('keyup', checkSpacebar)
+            window.removeEventListener('keyup', spaceListener)
         }
     })
 
     return (
         <div className="App">
-            <header>
-                <button type="button" onClick={addColour}>
-                    Add Colour
-                </button>
-                <button type="button" onClick={removeColour}>
-                    Remove Colour
-                </button>
-            </header>
-            <main className="colour-container">
-                <ul className="colour-list">{colours.map(colour =>
-                    <li key={colour.id}><ColourBar colour={colour} /></li>
-                )}</ul>
-            </main>
+            <ColoursContext.Provider value={{ colours, setColours }}>
+                <header className="app-header">
+                    <SettingsMenu />
+                </header>
+                <main className="colour-container">
+                    <ul className="colour-list">{ colours.map(colour =>
+                        <li className="colour-item" key={ colour.id }><ColourBar colour={ colour }/></li>
+                    ) }</ul>
+                </main>
+            </ColoursContext.Provider>
         </div>
     );
 }

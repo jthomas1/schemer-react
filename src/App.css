@@ -1,16 +1,35 @@
-.colour-container {
-  background-color: #282c34;
-  min-height: 100vh;
+.App {
+  max-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+}
+
+.app-header {
+  height: 50px;
+}
+
+.colour-container {
+  background-color: #282c34;
+  flex: 1;
+  display: flex;
+
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
 .colour-list {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
   list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.colour-item {
+  flex: 1;
+  display: flex;
 }
 
 .App-link {
