@@ -32,7 +32,7 @@ function App() {
     const [ layout, setLayout ] = useState<string>(Layouts.Columns)
 
     /**
-     * Randomise colours if the space bar is pressed
+     * Randomise all unlocked colours if the space bar is pressed
      * @param event
      */
     function spaceListener(event: KeyboardEvent) {
