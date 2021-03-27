@@ -58,6 +58,26 @@ function App() {
         }
     })
 
+    function swapPositions(idx1: number, idx2: number) : void {
+        const newColours: Colour[] = [...colours];
+        const temp1 = newColours[idx1];
+        newColours[idx1] = newColours[idx2]
+        newColours[idx2] = temp1;
+        setColours(newColours)
+    }
+
+    function dragOver(e :any) {
+        const sourceIndex = colours.findIndex(c => c.id === e.dataTransfer.getData("text/plain"))
+        const targetIndex = colours.findIndex(c => c.id === e.currentTarget.id);
+        if (sourceIndex !== targetIndex) {
+            swapPositions(sourceIndex, targetIndex)
+        }
+    }
+
+    function dragStart(e: any) {
+        e.dataTransfer.setData("text/plain", e.target.id)
+    }
+
 
     return (
         <div className="App">
@@ -68,7 +88,16 @@ function App() {
             </AppContext.Provider>
             <main className="colour-container">
                 <ul className={`colour-list ${ layout } `}>{ colours.map(colour =>
-                    <li className="colour-item" key={ colour.id }><ColourBar colour={ colour }/></li>
+                    <li
+                        id={ colour.id }
+                        className="colour-item"
+                        key={ colour.id }
+                        draggable
+                        onDragEnter={dragOver}
+                        onDragStart={dragStart}
+                    >
+                        <ColourBar colour={ colour }/>
+                    </li>
                 ) }</ul>
             </main>
         </div>

@@ -42,7 +42,7 @@ export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
     return (
         <div style={ styles } className={ `colour-bar ${ flipped ? 'flipped' : '' }` }>
             <div className="front" aria-hidden={ flipped }>
-                <p>{ colour.hex }</p>
+                <p>{ colour.hex.toUpperCase() }</p>
                 <button onClick={ toggleLock }>{ locked ? 'Unlock' : 'Lock' }</button>
                 <button onClick={ randomise }>Random</button>
                 <button onClick={ flip }>Flip</button>
