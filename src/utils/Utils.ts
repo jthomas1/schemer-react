@@ -21,3 +21,21 @@ export function swapArrayItems(inArray: any[], index1: number, index2: number) :
     outArray[index2] = temp;
     return outArray
 }
+
+/**
+ * Generate a random number in the given range
+ * @param min
+ * @param max
+ */
+export function randomInRange(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+/**
+ * Convert a decimal value to a hexadecimal value
+ * @param dec
+ */
+export function dec2Hex(dec: number) {
+    let hex = dec.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+}

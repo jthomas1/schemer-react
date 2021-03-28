@@ -1,6 +1,8 @@
 /**
  * Describes a colour as red, green and blue values from 0-255
  */
+import { dec2Hex, randomInRange } from "./Utils";
+
 export interface RGB {
     [key: string]: number
     red: number
@@ -20,29 +22,11 @@ export function generateRgb(): RGB {
 }
 
 /**
- * Generate a random number in the given range
- * @param min
- * @param max
- */
-export function randomInRange(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-/**
  * Convert the given RGB values to a hexadecimal string
  * @param colour
  */
 export function rgb2Hex(colour: RGB) {
     return `#${ dec2Hex(colour.red) }${ dec2Hex(colour.green) }${ dec2Hex(colour.blue) }`;
-}
-
-/**
- * Convert a decimal value to a hexadecimal value
- * @param dec
- */
-export function dec2Hex(dec: number) {
-    let hex = dec.toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
 }
 
 /*

@@ -4,8 +4,7 @@ import { ColourBar } from "./components/ColourBar/ColourBar";
 import { SettingsMenu } from "./components/SettingsMenu/SettingsMenu";
 import { ColourFactory } from "./utils/ColourFactory";
 import { Colour } from "./models/Colour";
-import { randomInRange } from "./utils/ColourUtils";
-import { swapArrayItems } from "./utils/Utils";
+import { swapArrayItems, randomInRange } from "./utils/Utils";
 
 export interface IAppContext {
     colours: Colour[],
