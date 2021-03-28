@@ -1,0 +1,4 @@
+.colour-controls {
+    display: flex;
+    flex-direction: column;
+}

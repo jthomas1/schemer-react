@@ -1,8 +1,9 @@
 /**
  * Describes a colour as red, green and blue values from 0-255
  */
-export type RGB = {
-    red: number;
+export interface RGB {
+    [key: string]: number
+    red: number
     green: number,
     blue: number
 }
