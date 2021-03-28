@@ -72,19 +72,20 @@ function App() {
         const targetIndex = colours.findIndex(c => c.id === e.currentTarget.id);
         if (sourceIndex !== targetIndex) {
             swapColours(sourceIndex, targetIndex)
-            setDraggingId('')
         }
     }
 
     function dragStart(e: any) {
-        console.log(colours);
-
         // for some reason the native dataTransfer API doesn't work in Edge but it does in firefox
         // e.dataTransfer.effectAllowed = "move"
         // e.dataTransfer.setData("text/plain", e.target.id)
 
         // set a local variable instead of using native API
         setDraggingId(e.target.id)
+    }
+
+    function dragEnd(e: any) {
+        setDraggingId('')
     }
 
     function shuffle() {
@@ -122,6 +123,7 @@ function App() {
                         onDragEnter={dragOver}
                         onDragStart={dragStart}
                         onDrop={dragOver}
+                        onDragEnd={dragEnd}
                     >
                         <ColourBar colour={ colour }/>
                     </li> : <pre> {JSON.stringify(colours)} </pre>
