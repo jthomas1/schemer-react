@@ -2,6 +2,8 @@ import React, { ChangeEvent, useState } from 'react';
 import { ColourFactory } from "../../utils/ColourFactory";
 import { useAppContext, Layouts } from "../../App";
 import { randomInRange, swapArrayItems } from "../../utils/Utils";
+import { Colour } from "../../models/Colour";
+import { RGB } from "../../utils/ColourUtils";
 
 interface SettingsMenuProps {
 }
@@ -40,6 +42,18 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
         setPartyOn(undefined)
     }
 
+    function showAlert() {
+        const data = colours.reduce((result: { hex: string, rgb: RGB }[], colour: Colour) => {
+            result.push({
+                hex: colour.hex,
+                rgb: colour.rgb
+            })
+
+            return result;
+        },[])
+        window.alert(JSON.stringify(data, null, 4))
+    }
+
     return (
         <div>
             <button type="button" onClick={ addColour }>
@@ -57,6 +71,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
             <button onClick={ partyTime }>Party time</button>
             <button onClick={ stopParty }>Stop</button>
             <button onClick={ shuffle }>Shuffle</button>
+            <button onClick={ showAlert }>Get JSON</button>
         </div>
     )
 }
