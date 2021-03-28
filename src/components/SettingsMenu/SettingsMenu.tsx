@@ -4,6 +4,7 @@ import { useAppContext, Layouts } from "../../App";
 import { randomInRange, swapArrayItems } from "../../utils/Utils";
 import { Colour } from "../../models/Colour";
 import { RGB } from "../../utils/ColourUtils";
+import './SettingsMenu.css'
 
 interface SettingsMenuProps {
 }
@@ -50,28 +51,42 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
             })
 
             return result;
-        },[])
-        window.alert(JSON.stringify(data, null, 4))
+        }, [])
+        const formatted = JSON.stringify(data, null, 4)
+        console.log(formatted)
+        window.alert(formatted)
     }
 
     return (
-        <div>
-            <button type="button" onClick={ addColour }>
-                Add Colour
-            </button>
-            <button type="button" onClick={ removeColour }>
-                Remove Colour
-            </button>
-            <label htmlFor="layoutSelect">Layout: </label>
-            <select name="layoutSelect" id="layoutSelect" defaultValue={ layout } onChange={ layoutHandler }>
-                { Object.values(Layouts).map(layout => {
-                    return <option key={layout} value={ layout }>{ layout }</option>
-                }) }
-            </select>
-            <button onClick={ partyTime }>Party time</button>
-            <button onClick={ stopParty }>Stop</button>
-            <button onClick={ shuffle }>Shuffle</button>
-            <button onClick={ showAlert }>Get JSON</button>
-        </div>
+        <ul className="menu-items">
+            <li className="menu-item">
+                <button type="button" onClick={ addColour }>
+                    Add Colour
+                </button>
+            </li>
+            <li className="menu-item">
+                <button type="button" onClick={ removeColour }>
+                    Remove Colour
+                </button>
+            </li>
+            <li className="menu-item"><label htmlFor="layoutSelect">Layout: </label>
+                <select name="layoutSelect" id="layoutSelect" defaultValue={ layout } onChange={ layoutHandler }>
+                    { Object.values(Layouts).map(layout => {
+                        return <option key={ layout } value={ layout }>{ layout }</option>
+                    }) }
+                </select></li>
+            <li className="menu-item">
+                <button onClick={ partyTime }>Party time</button>
+            </li>
+            <li className="menu-item">
+                <button onClick={ stopParty }>Stop</button>
+            </li>
+            <li className="menu-item">
+                <button onClick={ shuffle }>Shuffle</button>
+            </li>
+            <li className="menu-item">
+                <button onClick={ showAlert }>Get JSON</button>
+            </li>
+        </ul>
     )
 }
