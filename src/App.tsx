@@ -115,20 +115,19 @@ function App() {
             </AppContext.Provider>
             <main className="colour-container">
                 <ul className={`colour-list ${ layout } `}>{ colours.map(colour =>
-                    colour ?  <li
-                        id={ colour.id }
-                        className="colour-item"
-                        key={ colour.id }
-                        draggable
-                        onDragEnter={dragOver}
-                        onDragStart={dragStart}
-                        onDrop={dragOver}
-                        onDragEnd={dragEnd}
-                    >
-                        <ColourBar colour={ colour }/>
-                    </li> : <pre> {JSON.stringify(colours)} </pre>
-
-                ) }</ul>
+                     <li
+                         id={ colour.id }
+                         className="colour-item"
+                         key={ colour.id }
+                         draggable
+                         onDragEnter={ dragOver }
+                         onDragStart={ dragStart }
+                         onDrop={ dragOver }
+                         onDragEnd={ dragEnd }
+                     >
+                         <ColourBar colour={ colour }/>
+                     </li>
+                )}</ul>
             </main>
         </div>
     );
