@@ -1,19 +1,13 @@
 import React from 'react';
 import './ColourControls.css'
 import { useColourBarContext } from "../ColourBar/ColourBar";
+import { suppressEvent } from "../../utils/Utils";
 
 interface ColourControlsProps {
 }
 
 export const ColourControls: React.FC<ColourControlsProps> = () => {
     const { colour, updateRGB } = useColourBarContext()
-
-    // Suppress any DOM events
-    // Used to prevent interacting with the sliders causing drag and drop for the whole container
-    function suppressEvent(e: any) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
 
     function update(e: any) {
         const type = e.target.dataset.colour;

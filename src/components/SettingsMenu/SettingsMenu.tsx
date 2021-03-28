@@ -33,7 +33,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
             <label htmlFor="layoutSelect">Layout: </label>
             <select name="layoutSelect" id="layoutSelect" defaultValue={ layout } onChange={ layoutHandler }>
                 { Object.values(Layouts).map(layout => {
-                    return <option value={ layout }>{ layout }</option>
+                    return <option key={layout} value={ layout }>{ layout }</option>
                 }) }
             </select>
         </div>

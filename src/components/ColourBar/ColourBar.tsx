@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Colour } from "../../models/Colour";
 import { ColourControls } from "../ColourControls/ColourControls";
 import { ColourFactory } from "../../utils/ColourFactory";
+import { suppressEvent } from "../../utils/Utils";
 
 
 interface ColourBarProps {
@@ -60,7 +61,7 @@ export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
     return (
         <div style={ styles } className={ `colour-bar ${ flipped ? 'flipped' : '' }` }>
             <div className="front" aria-hidden={ flipped }>
-                <p>{ colour.hex.toUpperCase() }</p>
+                <p draggable onDragStart={suppressEvent}>{ colour.hex.toUpperCase() }</p>
                 <div>
                     <button onClick={ toggleLock }>{ locked ? 'Unlock' : 'Lock' }</button>
                     <button onClick={ randomise }>Random</button>

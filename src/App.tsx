@@ -5,6 +5,7 @@ import { SettingsMenu } from "./components/SettingsMenu/SettingsMenu";
 import { ColourFactory } from "./utils/ColourFactory";
 import { Colour } from "./models/Colour";
 import { randomInRange } from "./utils/ColourUtils";
+import { swapArrayItems } from "./utils/Utils";
 
 export interface IAppContext {
     colours: Colour[],
@@ -32,6 +33,7 @@ function App() {
     const [ colours, setColours ] = useState<Colour[]>(ColourFactory.generateN(4))
     const [ layout, setLayout ] = useState<string>(Layouts.Columns)
     const [ partyOn, setPartyOn ] = useState<number>()
+    const [ draggingId, setDraggingId ] = useState<string>('')
 
     /**
      * Randomise all unlocked colours if the space bar is pressed
@@ -60,37 +62,44 @@ function App() {
         }
     })
 
-    function swapPositions(idx1: number, idx2: number) : void {
-        const newColours: Colour[] = [...colours];
-        const temp = newColours[idx1];
-        newColours[idx1] = newColours[idx2]
-        newColours[idx2] = temp;
-        setColours(newColours)
+    function swapColours(index1: number, index2: number) : void {
+        setColours(swapArrayItems(colours, index1, index2))
     }
 
     function dragOver(e :any) {
-        const sourceIndex = colours.findIndex(c => c.id === e.dataTransfer.getData("text/plain"))
+        if (!draggingId) return
+        const sourceIndex = colours.findIndex(c => c.id === draggingId)
         const targetIndex = colours.findIndex(c => c.id === e.currentTarget.id);
         if (sourceIndex !== targetIndex) {
-            swapPositions(sourceIndex, targetIndex)
+            swapColours(sourceIndex, targetIndex)
+            setDraggingId('')
         }
     }
 
     function dragStart(e: any) {
-        e.dataTransfer.setData("text/plain", e.target.id)
+        console.log(colours);
+
+        // for some reason the native dataTransfer API doesn't work in Edge but it does in firefox
+        // e.dataTransfer.effectAllowed = "move"
+        // e.dataTransfer.setData("text/plain", e.target.id)
+
+        // set a local variable instead of using native API
+        setDraggingId(e.target.id)
     }
 
     function shuffle() {
-        swapPositions(randomInRange(0,4), randomInRange(0,4))
+        swapColours(randomInRange(0,4), randomInRange(0,4))
     }
 
     function partyTime() {
+        if (partyOn) return
         shuffle()
         setPartyOn(window.setInterval(shuffle, 500))
     }
 
     function stopParty() {
         window.clearInterval(partyOn)
+        setPartyOn(undefined)
     }
 
     return (
@@ -105,7 +114,7 @@ function App() {
             </AppContext.Provider>
             <main className="colour-container">
                 <ul className={`colour-list ${ layout } `}>{ colours.map(colour =>
-                    <li
+                    colour ?  <li
                         id={ colour.id }
                         className="colour-item"
                         key={ colour.id }
@@ -115,7 +124,8 @@ function App() {
                         onDrop={dragOver}
                     >
                         <ColourBar colour={ colour }/>
-                    </li>
+                    </li> : <pre> {JSON.stringify(colours)} </pre>
+
                 ) }</ul>
             </main>
         </div>
