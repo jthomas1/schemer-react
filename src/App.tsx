@@ -4,7 +4,7 @@ import { ColourBar } from "./components/ColourBar/ColourBar";
 import { SettingsMenu } from "./components/SettingsMenu/SettingsMenu";
 import { ColourFactory } from "./utils/ColourFactory";
 import { Colour } from "./models/Colour";
-import { swapArrayItems, randomInRange } from "./utils/Utils";
+import { swapArrayItems } from "./utils/Utils";
 
 export interface IAppContext {
     colours: Colour[],
@@ -19,7 +19,7 @@ export enum Layouts {
     Grid = 'grid'
 }
 
-export const AppContext = createContext<IAppContext>( {
+export const AppContext = createContext<IAppContext>({
     colours: [],
     setColours: colours => console.warn('no colours provider'),
     layout: 'columns',
@@ -31,7 +31,6 @@ export const useAppContext = () => useContext(AppContext);
 function App() {
     const [ colours, setColours ] = useState<Colour[]>(ColourFactory.generateN(4))
     const [ layout, setLayout ] = useState<string>(Layouts.Columns)
-    const [ partyOn, setPartyOn ] = useState<number>()
     const [ draggingId, setDraggingId ] = useState<string>('')
 
     /**
@@ -61,12 +60,13 @@ function App() {
         }
     })
 
-    function swapColours(index1: number, index2: number) : void {
+    function swapColours(index1: number, index2: number): void {
         setColours(swapArrayItems(colours, index1, index2))
     }
 
-    function dragOver(e :any) {
+    function dragOver(e: any) {
         if (!draggingId) return
+        if (colours.find(c => draggingId === e.currentTarget.id)?.locked) return
         const sourceIndex = colours.findIndex(c => c.id === draggingId)
         const targetIndex = colours.findIndex(c => c.id === e.currentTarget.id);
         if (sourceIndex !== targetIndex) {
@@ -75,6 +75,7 @@ function App() {
     }
 
     function dragStart(e: any) {
+        if (colours.find(c => c.id === e.target.id)?.locked) return
         // for some reason the native dataTransfer API doesn't work in Edge but it does in firefox
         // e.dataTransfer.effectAllowed = "move"
         // e.dataTransfer.setData("text/plain", e.target.id)
@@ -87,46 +88,28 @@ function App() {
         setDraggingId('')
     }
 
-    function shuffle() {
-        swapColours(randomInRange(0,4), randomInRange(0,4))
-    }
-
-    function partyTime() {
-        if (partyOn) return
-        shuffle()
-        setPartyOn(window.setInterval(shuffle, 500))
-    }
-
-    function stopParty() {
-        window.clearInterval(partyOn)
-        setPartyOn(undefined)
-    }
-
     return (
         <div className="App">
-            <AppContext.Provider value={{ colours, setColours, layout, setLayout }}>
+            <AppContext.Provider value={ { colours, setColours, layout, setLayout } }>
                 <header className="app-header">
-                    <SettingsMenu />
-                    <button onClick={partyTime}>Party time</button>
-                    <button onClick={stopParty}>Stop</button>
-                    <button onClick={shuffle}>Shuffle</button>
+                    <SettingsMenu/>
                 </header>
             </AppContext.Provider>
             <main className="colour-container">
-                <ul className={`colour-list ${ layout } `}>{ colours.map(colour =>
-                     <li
-                         id={ colour.id }
-                         className="colour-item"
-                         key={ colour.id }
-                         draggable
-                         onDragEnter={ dragOver }
-                         onDragStart={ dragStart }
-                         onDrop={ dragOver }
-                         onDragEnd={ dragEnd }
-                     >
-                         <ColourBar colour={ colour }/>
-                     </li>
-                )}</ul>
+                <ul className={ `colour-list ${ layout } ` }>{ colours.map(colour =>
+                    <li
+                        id={ colour.id }
+                        className="colour-item"
+                        key={ colour.id }
+                        draggable
+                        onDragEnter={ dragOver }
+                        onDragStart={ dragStart }
+                        onDrop={ dragOver }
+                        onDragEnd={ dragEnd }
+                    >
+                        <ColourBar colour={ colour }/>
+                    </li>
+                ) }</ul>
             </main>
         </div>
     );

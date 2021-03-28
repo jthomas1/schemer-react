@@ -14,12 +14,16 @@ interface ColourBarProps {
 
 interface IColourBarContext {
     colour: Colour,
-    updateRGB: (rgb: RGB) => void
+    updateRGB: (rgb: RGB) => void,
+    locked: boolean,
+    toggleLock: () => void
 }
 
-export const ColourBarContext= createContext<IColourBarContext>({
+export const ColourBarContext = createContext<IColourBarContext>({
     colour: ColourFactory.random(),
-    updateRGB: rgb => console.warn('no update rgb provider')
+    updateRGB: rgb => console.warn('no update rgb provider'),
+    locked: false,
+    toggleLock: () => console.warn('no lock provider')
 })
 
 export const useColourBarContext = () => useContext(ColourBarContext);
@@ -35,18 +39,10 @@ export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
         color: textColour
     }
 
-    /**
-     * Randomises the background colour unless the user has locked it.
-     */
-    function randomise() {
-        if (locked) return;
-        colour.randomise()
-        updateRGB(colour.rgb)
-    }
-
     function toggleLock() {
         colour.locked = !colour.locked;
         setLocked(!locked)
+        flip()
     }
 
     function flip() {
@@ -59,23 +55,25 @@ export const ColourBar: React.FC<ColourBarProps> = ({ colour }) => {
     }
 
     return (
-        <div style={ styles } className={ `colour-bar ${ flipped ? 'flipped' : '' }` }>
-            <div className="front" aria-hidden={ flipped }>
-                <p draggable onDragStart={suppressEvent}>{ colour.hex.toUpperCase() }</p>
+        <div
+            style={ styles }
+            className={ `colour-bar ${ flipped ? 'flipped' : '' }` }>
+            <div
+                className="front"
+                aria-hidden={ flipped }>
+                <p draggable onDragStart={ suppressEvent }>{ colour.hex.toUpperCase() }</p>
                 <div>
-                    <button onClick={ toggleLock }>{ locked ? 'Unlock' : 'Lock' }</button>
-                    <button onClick={ randomise }>Random</button>
-                    <button onClick={ flip }>Flip</button>
-                </div>
-                <div>
-                    <ColourBarContext.Provider value={{ colour, updateRGB }}>
-                        <ColourControls />
+                    <ColourBarContext.Provider value={ { colour, updateRGB, locked, toggleLock } }>
+                        <ColourControls/>
                     </ColourBarContext.Provider>
-
                 </div>
             </div>
             <div className="back flipped" aria-hidden={ !flipped }>
-                <button  onClick={ flip }>Flip</button>
+                <button
+                    onClick={ toggleLock }
+                    aria-label="Unlock">
+                    <i aria-hidden="true" className="bi-unlock"/>
+                </button>
             </div>
         </div>
     )
