@@ -28,12 +28,16 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = () => {
     }
 
     function shuffle() {
-        const index1 = randomInRange(0, colours.length);
-        const index2 = randomInRange(0, colours.length);
-        if (index1 !== index2) {
-            const newOrder = swapArrayItems(colours, index1, index2)
-            setColours(newOrder)
-        }
+        const copy = [...colours];
+
+        copy.sort((a, b) : number => {
+            const val = Math.floor(Math.random() * 3)
+            if (val > 1) return 1
+            if (val < 1) return -1
+            return 0
+        })
+
+        setColours(copy)
     }
 
     function partyTime() {
